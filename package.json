@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "dev": "ts-node-dev --respawn src/index.ts",
+    "dev": "ts-node-dev --respawn src/index.ts --watch",
     "migration:run": "npm run typeorm migration:run",
     "migration:revert": "npm run typeorm migration:revert",
     "migration:generate": "ts-node-dev --respawn ./node_modules/.bin/typeorm migration:generate",
@@ -15,12 +15,26 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@hapi/hapi": "^21.3.10",
+    "@types/hapi": "^18.0.14",
+    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
+    "hapi": "^18.1.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "knex": "^3.1.0",
     "pg": "^8.13.0",
     "reflect-metadata": "^0.2.2",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.7.4",
+    "@types/pg": "^8.11.10",
+    "@types/uuid": "^10.0.0",
+    "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsconfig-paths": "^4.2.0",
