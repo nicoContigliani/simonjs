@@ -31,9 +31,9 @@ const init = async () => {
   // Generate routes based on models
   const treeRoutes = models.reduce((acc: any, model: any) => {
     return { ...acc, ...generateRoutes(model) };
-}, {});
+  }, {});
 
-registerRoutes(server, treeRoutes);
+  registerRoutes(server, treeRoutes);
 
 
 

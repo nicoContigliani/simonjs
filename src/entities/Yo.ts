@@ -1,8 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
-import { models } from '../routes/treeRoutes';
 
 @Entity()
-export class User {
+export class Yo {
   @PrimaryGeneratedColumn()
   id!: number;
 
