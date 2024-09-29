@@ -2,18 +2,21 @@ import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import { models } from '../routes/treeRoutes';
 
 @Entity()
-export class User {
+export class Product {
  
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column()
-  firstName!: string;
+  name!: string;
 
   @Column()
-  lastName!: string;
+  description!: string;
 
   @Column()
-  age!: number;
+  price!: number;
+
+  @Column()
+  stock!: number;
 
 }

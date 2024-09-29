@@ -14,6 +14,7 @@ export const generateRoutes = (model: any | undefined) => {
     const data: any | undefined = rulesValidations;
 
     const businessLogicModel = businessLogic[model];
+    console.log("🚀 ~ generateRoutes ~ businessLogicModel:", businessLogicModel)
     return {
         [model]: {
             path: `/${model}/{id?}`,
@@ -21,18 +22,35 @@ export const generateRoutes = (model: any | undefined) => {
                 GET: {
                     handler: (request: { params: { id: any; }; }, h: any) => {
                         try {
-                            const id = request.params.id;
+                            const id = request?.params?.id;
                             if (id) {
-                                return `Obteniendo ${model} con id ${id}  ${businessLogic[model].GET(id)}`;
+                                const asyncFuntion = async () => {
+                                    console.log("entro a dto *******id****",businessLogic[model])
+
+                                    return `Obteniendo ${model} con id ${id}  ${businessLogic[model]?.GET(id, `${model}`)}`;
+                                }
+                                return asyncFuntion();
+
+
                             } else {
                                 const asyncFuntion = async () => {
-                                    return `Obteniendo todos los ${model}  ${businessLogic[model].GET()} `;
+                                    console.log("tree routes")
+                                    // try {
+                                    //     console.log("entro a dto *******sin id****",businessLogic[model])
+                                    //     return businessLogic[model]
+                                    // } catch (error) {
+                                    //     console.log("🚀 ~ asyncFuntion ~ error:", error)
+                                        
+                                    // }
+                                    // return `Obteniendo todos los ${model}  ${businessLogic[model]?.GET(id, `${model}`)} `;
+                                    return businessLogic[model]?.GET(id, `${model}`)
+                               
                                 }
                                 return asyncFuntion();
                             }
 
                         } catch (error) {
-                            console.log("🚀 ~ generateRoutes ~ error:", error)
+                            console.log("🚀 ~ generateRoutes ~ error:---35", error)
 
                         }
                     }
@@ -48,7 +66,7 @@ export const generateRoutes = (model: any | undefined) => {
                             return asyncFuntion();
 
                         } catch (error) {
-                            console.log("🚀 ~ generateRoutes ~ error:", error)
+                            console.log("🚀 ~ generateRoutes ~ error:--51", error)
                         }
                         return h.response(nuevoUsuario).code(201);
                     },
@@ -79,7 +97,7 @@ export const generateRoutes = (model: any | undefined) => {
                             }
                             return asyncFuntion();
                         } catch (error) {
-                            console.log("🚀 ~ generateRoutes ~ error:", error)
+                            console.log("🚀 ~ generateRoutes ~ error:----82", error)
 
                         }
 
@@ -112,7 +130,7 @@ export const generateRoutes = (model: any | undefined) => {
                             return asyncFuntion();
 
                         } catch (error) {
-                            console.log("🚀 ~ generateRoutes ~ error:", error)
+                            console.log("🚀 ~ generateRoutes ~ error:----115", error)
 
                         }
                         return h.response({ message: `Eliminando ${model} con id ${id}` }).code(200);
