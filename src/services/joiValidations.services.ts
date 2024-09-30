@@ -132,13 +132,13 @@ export const rulesValidations: object = {
             Joi.number().min(1),         // Permite números con un valor mínimo de 1
             Joi.string().alphanum().min(1) // Permite cadenas alfanuméricas con al menos 1 carácter
         )
-        .optional() // El id sigue siendo opcional
-        .messages({
-            'alternatives.match': 'ID must be a number or alphanumeric string',
-            'number.min': 'ID (number) must be greater than or equal to 1',
-            'string.min': 'ID (string) must have at least 1 character',
-            'string.alphanum': 'ID must contain only letters and numbers'
-        }),
+            .optional() // El id sigue siendo opcional
+            .messages({
+                'alternatives.match': 'ID must be a number or alphanumeric string',
+                'number.min': 'ID (number) must be greater than or equal to 1',
+                'string.min': 'ID (string) must have at least 1 character',
+                'string.alphanum': 'ID must contain only letters and numbers'
+            }),
         productId: Joi.number()
             .min(1) // Edad mínima de 18
             .max(150) // Edad máxima de 150
@@ -156,12 +156,18 @@ export const rulesValidations: object = {
         review: Joi.string()
             .min(3) // Longitud mínima de 3 caracteres
             .max(30) // Longitud máxima de 30 caracteres
-            .required() // Campo requerido
+            .optional() // El id sigue siendo opcional// Campo requerido
             .messages({
                 'string.min': 'Name must be at least 3 characters long',
                 'string.max': 'Name must be less than 30 characters long',
                 'any.required': 'Name is required'
             }),
+        status_Evaluation: Joi.bool()
+            .optional() // El id sigue siendo opcional// Campo requerido
+            .messages({
+                'string.min': 'Name must be at least 3 characters long',
+            }),
+
 
     }),
 

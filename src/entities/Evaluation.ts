@@ -4,7 +4,7 @@ import { Product } from './Product';
 @Entity()
 export class Evaluation {
     @PrimaryGeneratedColumn()
-    id!: number|string;
+    id!: number | string;
 
     @Column()
     rating!: number;
@@ -15,10 +15,11 @@ export class Evaluation {
     @Column()
     productId!: number;
 
+    @Column()
+    status_Evaluation!: boolean;
 
-
-     @ManyToOne(() => Product, { nullable: false })
-     product!: Product; // Relación unidireccional a Product
+    @ManyToOne(() => Product, { nullable: false })
+    product!: Product; // Relación unidireccional a Product
 
 }
 

@@ -107,48 +107,43 @@ export const businessLogic: any = {
         },
         PUT: async (id: string | number, data: any[] | any | undefined, model: any) => {
 
-            // try {
-            //     console.log("🚀 ~ PUT: ~ id, data:", id, data, "************************************************")
-
-            //     await dao[model].update(id, data);
-            //     return await dao[model].findOne(id);
-
-            // } catch (error) {
-            //     console.log("🚀 ~ error: -16-", error, `Error fetching data for model: ${model}`);
-            //     return `Error fetching data for model: ${model}`;
-            // }
-
             try {
                 // Verifica si 'id' y 'data' son válidos
                 if (!id || !data) {
                     throw new Error("Missing 'id' or 'data' for update operation");
                 }
-        
-                console.log("🚀 ~ PUT: ~ id, data:", id, data, "************************************************");
-        
-                // Actualiza el registro usando Sequelize, especificando la condición (where) para buscar el registro por ID
-                const updateResult = await dao[model].update(data, {
-                    where: { id }
-                });
-        
-                // Verifica si alguna fila fue actualizada
-                if (updateResult[0] === 0) {
-                    throw new Error(`No records found to update for model: ${model} with id: ${id}`);
-                }
-        
-                // Retorna el registro actualizado
-                const updatedRecord = await dao[model].findOne({ where: { id } });
+
+                const updatedRecord = await dao[model].put(data, id);
                 return updatedRecord;
-        
-            } catch (error) {
-                console.log("🚀 ~ error: -16-", error, `Error updating data for model: ${model}`);
+
+            } catch (error: any) {
+                console.log("🚀 ~ error: -131-", error.messages, `Error updating data for model: ${model}`);
                 return `Error updating data for model: ${model}`;
             }
 
             // return `user updated ${data}-----|----${id}`
         },
-        DELETE: (id: string | number) => {
-            return `user deleted -----|----${id}`
+        DELETE: async (id: string | number, model: any) => {
+
+            // Crear el objeto con la clave dinámica y el valor asignado
+            const data = { [`status_${model}`]: false };
+
+            // console.log("🚀 ~ data:", data)
+            // return `user deleted -----|----${id}`
+
+            try {
+                // Verifica si 'id' y 'data' son válidos
+                if (!id || !data) {
+                    throw new Error("Missing 'id' or 'data' for delete operation");
+                }
+
+                const updatedRecord = await dao[model].put(data, id);
+                return updatedRecord;
+
+            } catch (error: any) {
+                console.log("🚀 ~ error: -131-", error.messages, `Error delete data for model: ${model}`);
+                return `Error updating data for model: ${model}`;
+            }
         }
     }
 

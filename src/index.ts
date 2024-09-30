@@ -3,7 +3,10 @@ import { AppDataSource } from './ormconfig';
 import Hapi from '@hapi/hapi';
 import registerRoutes from './routes/registerRoutes';
 import { models, generateRoutes } from './routes/treeRoutes';
+import { todoSTart } from './services/simonStart.services';
 const init = async () => {
+  todoSTart()
+
   // Inicializar la base de datos
   try {
     await AppDataSource.initialize();

@@ -14,6 +14,7 @@ export const generateRoutes = (model: any | undefined) => {
 
     const businessLogicModel = businessLogic[model];
     return {
+
         [model]: {
             path: `/${model}/{id?}`,
             methods: {
@@ -28,6 +29,7 @@ export const generateRoutes = (model: any | undefined) => {
                                 return asyncFuntion();
                             } else {
                                 const asyncFuntion = async () => {
+
                                     return businessLogic[model]?.GET(id, `${model}`)
                                 }
                                 return asyncFuntion();
@@ -76,10 +78,9 @@ export const generateRoutes = (model: any | undefined) => {
 
                         try {
                             const asyncFuntion = async () => {
-                                console.log("🚀 ~ generateRoutes ~ asyncFuntion:----83", id,"***************", datosActualizados,"**************" ,model)
-                                // return businessLogic[model]?.POST(newData, `${model}`)
-                                return businessLogic[model]?.PUT(id, datosActualizados, model)
-                                // return `Obteniendo todos los ${model}  ${businessLogic[model].PUT(datosActualizados, id, model)} `;
+                                const si = await businessLogic[model]?.PUT(id, datosActualizados, model)
+                                return await businessLogic[model]?.GET(id, `${model}`)
+
 
                             }
                             return asyncFuntion();
@@ -90,7 +91,7 @@ export const generateRoutes = (model: any | undefined) => {
 
                         // return h.response(newData).code(201);
 
-                        return h.response({ message: `Actualizando ${model} con id ${id}`, datos: datosActualizados }).code(200);
+                        // return h.response({ message: `Actualizando ${model} con id ${id}`, datos: datosActualizados }).code(200);
                     },
                     options: {
                         validate: {
@@ -112,7 +113,7 @@ export const generateRoutes = (model: any | undefined) => {
                         try {
                             const asyncFuntion = async () => {
 
-                                return `Obteniendo todos los ${model}  ${businessLogic[model].DELETE(id)} `;
+                                return `Obteniendo todos los ${model}  ${businessLogic[model].DELETE(id, model)} `;
 
                             }
                             return asyncFuntion();

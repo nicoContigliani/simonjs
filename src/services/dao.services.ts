@@ -32,11 +32,36 @@ export const dao: any = {
         put: async (data: any, id: any) => {
             console.log("🚀 ~ put: ~ data:", data)
             const Entity = await entities('Evaluation');
-            const repository = AppDataSource.getRepository(Entity);
+            const repository = await AppDataSource.getRepository(Entity);
+            // await repository.update(id, data);
+            try {
+                const updateResult = await repository.update(id, data);
+                console.log("🚀 ~ put: ~ updateResult:---39", updateResult)
+                return updateResult
 
-            await repository.update(id, data);
-            return repository.findOne(id);
+            } catch (error) {
+                console.log("🚀 ~ put: ~ error:", error)
+
+            }
+            // const item = await repository.findOne({
+            //     where: { id },  // Busca por el campo 'id'
+            //     relations: ['product'] // Incluye la relación con 'product'
+            // });
+            // return item;
         },
+        delete: async (data: any, id: any) => {
+            const Entity = await entities('Evaluation');
+            const repository = await AppDataSource.getRepository(Entity);
+            try {
+                const updateResult = await repository.update(id, data);
+                return updateResult
+
+            } catch (error) {
+                console.log("🚀 ~ put: ~ error:", error)
+
+            }
+        },
+
         // Aquí puedes agregar otros métodos, como findOne, create, update, etc.
     },
 } 
