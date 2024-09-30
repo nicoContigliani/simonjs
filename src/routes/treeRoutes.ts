@@ -9,12 +9,10 @@ const usuarioSchema = Joi.object({
 
 export const models = modelsRead(); // Example of models
 
-
 export const generateRoutes = (model: any | undefined) => {
     const data: any | undefined = rulesValidations;
 
     const businessLogicModel = businessLogic[model];
-    console.log("🚀 ~ generateRoutes ~ businessLogicModel:", businessLogicModel)
     return {
         [model]: {
             path: `/${model}/{id?}`,
@@ -25,50 +23,36 @@ export const generateRoutes = (model: any | undefined) => {
                             const id = request?.params?.id;
                             if (id) {
                                 const asyncFuntion = async () => {
-                                    console.log("entro a dto *******id****",businessLogic[model])
-
-                                    return `Obteniendo ${model} con id ${id}  ${businessLogic[model]?.GET(id, `${model}`)}`;
+                                    return businessLogic[model]?.GET(id, `${model}`)
                                 }
                                 return asyncFuntion();
-
-
                             } else {
                                 const asyncFuntion = async () => {
-                                    console.log("tree routes")
-                                    // try {
-                                    //     console.log("entro a dto *******sin id****",businessLogic[model])
-                                    //     return businessLogic[model]
-                                    // } catch (error) {
-                                    //     console.log("🚀 ~ asyncFuntion ~ error:", error)
-                                        
-                                    // }
-                                    // return `Obteniendo todos los ${model}  ${businessLogic[model]?.GET(id, `${model}`)} `;
                                     return businessLogic[model]?.GET(id, `${model}`)
-                               
                                 }
                                 return asyncFuntion();
                             }
-
                         } catch (error) {
-                            console.log("🚀 ~ generateRoutes ~ error:---35", error)
-
+                            console.log("🚀 ~ generateRoutes ~ error:---40", error)
                         }
                     }
                 },
                 POST: {
                     handler: (request: { payload: any; }, h: { response: (arg0: any) => any; }) => {
-                        const nuevoUsuario = request.payload;
+                        const newData = request.payload;
                         try {
+                            // console.log(`Obteniendo todos los ${model}  ${businessLogic[model].POST(nuevoUsuario)} `)
                             const asyncFuntion = async () => {
-
-                                return `Obteniendo todos los ${model}  ${businessLogic[model].POST(nuevoUsuario)} `;
+                                // return businessLogic[model]?.POST( `${nuevoUsuario}`)
+                                // return `Obteniendo todos los ${model}  ${businessLogic[model].POST(nuevoUsuario)} `;
+                                return businessLogic[model]?.POST(newData, `${model}`)
                             }
                             return asyncFuntion();
 
                         } catch (error) {
                             console.log("🚀 ~ generateRoutes ~ error:--51", error)
                         }
-                        return h.response(nuevoUsuario).code(201);
+                        return h.response(newData).code(201);
                     },
                     options: {
                         validate: {
@@ -84,6 +68,7 @@ export const generateRoutes = (model: any | undefined) => {
                     handler: (request: { params: { id: any; }; payload: any; }, h: any) => {
                         const id = request.params.id;
                         const datosActualizados = request.payload;
+                        console.log("geting put")
 
                         if (!id) {
                             return h.response({ message: 'ID requerido para actualizar.' }).code(400);
@@ -91,8 +76,10 @@ export const generateRoutes = (model: any | undefined) => {
 
                         try {
                             const asyncFuntion = async () => {
-
-                                return `Obteniendo todos los ${model}  ${businessLogic[model].PUT(datosActualizados, id)} `;
+                                console.log("🚀 ~ generateRoutes ~ asyncFuntion:----83", id,"***************", datosActualizados,"**************" ,model)
+                                // return businessLogic[model]?.POST(newData, `${model}`)
+                                return businessLogic[model]?.PUT(id, datosActualizados, model)
+                                // return `Obteniendo todos los ${model}  ${businessLogic[model].PUT(datosActualizados, id, model)} `;
 
                             }
                             return asyncFuntion();
@@ -101,6 +88,7 @@ export const generateRoutes = (model: any | undefined) => {
 
                         }
 
+                        // return h.response(newData).code(201);
 
                         return h.response({ message: `Actualizando ${model} con id ${id}`, datos: datosActualizados }).code(200);
                     },
