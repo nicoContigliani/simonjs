@@ -22,6 +22,7 @@ const init = async () => {
     host: 'localhost'
   });
 
+
   // Definir una ruta de prueba
   server.route({
     method: 'GET',
@@ -50,6 +51,6 @@ process.on('unhandledRejection', (err) => {
   console.log(err);
   process.exit(1);
 });
-
 // Llamar a la función de inicialización
 init();
+

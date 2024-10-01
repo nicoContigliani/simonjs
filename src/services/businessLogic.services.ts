@@ -127,16 +127,11 @@ export const businessLogic: any = {
 
             // Crear el objeto con la clave dinámica y el valor asignado
             const data = { [`status_${model}`]: false };
-
-            // console.log("🚀 ~ data:", data)
-            // return `user deleted -----|----${id}`
-
             try {
                 // Verifica si 'id' y 'data' son válidos
                 if (!id || !data) {
                     throw new Error("Missing 'id' or 'data' for delete operation");
                 }
-
                 const updatedRecord = await dao[model].put(data, id);
                 return updatedRecord;
 

@@ -9,7 +9,9 @@
     "migration:revert": "npm run typeorm migration:revert",
     "migration:generate": "ts-node-dev --respawn ./node_modules/.bin/typeorm migration:generate",
     "typeorm": "ts-node ./node_modules/.bin/typeorm",
-    "test": "jest"
+    "test": "jest",
+    "test:unit": "jest __tests__/unit",
+    "test:integration": "jest __tests__/integration-tests"
   },
   "keywords": [],
   "author": "",
@@ -36,9 +38,11 @@
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^22.7.4",
     "@types/pg": "^8.11.10",
+    "@types/supertest": "^6.0.2",
     "@types/uuid": "^10.0.0",
     "jest": "^29.7.0",
     "nodemon": "^3.1.7",
+    "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
