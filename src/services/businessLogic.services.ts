@@ -1,7 +1,8 @@
 import { AppDataSource } from '../ormconfig';
 import { dao } from './dao.services';
+import { messageError } from './messageError.services';
 
-process.env.ENVIRIOMENTS
+
 
 
 
@@ -29,7 +30,7 @@ export const businessLogic: any = {
                 return todo
 
             } catch (error) {
-                console.log("🚀 ~ error: -16-", error);
+               if(process.env.ENVIRIOMENTS==="developer") messageError("\n You need add dto model in src/services/dao.services.ts file")
                 return `Error fetching data for model: ${model}`;
             }
 
@@ -39,7 +40,7 @@ export const businessLogic: any = {
                 const todo = await dao[model].post(data);
                 return todo
             } catch (error) {
-                console.log("🚀 ~ error: -16-", error, `Error fetching data for model: ${model}`);
+                if(process.env.ENVIRIOMENTS==="developer") messageError(`\n Post: You need add dto model in src/services/dao.services.ts file --- ${model}`)
                 return `Error fetching data for model: ${model}`;
             }
         },
@@ -55,8 +56,9 @@ export const businessLogic: any = {
                 return updatedRecord;
 
             } catch (error: any) {
-                console.log("🚀 ~ error: -131-", error.messages, `Error updating data for model: ${model}`);
-                return `Error updating data for model: ${model}`;
+
+                if(process.env.ENVIRIOMENTS==="developer") messageError(`\n Put: You need add dto model in src/services/dao.services.ts file --- ${model}`)
+                    return `Error updating data for model: ${model}`;
             }
 
             // return `user updated ${data}-----|----${id}`
@@ -74,7 +76,7 @@ export const businessLogic: any = {
                 return updatedRecord;
 
             } catch (error: any) {
-                console.log("🚀 ~ error: -131-", error.messages, `Error delete data for model: ${model}`);
+                if(process.env.ENVIRIOMENTS==="developer") messageError(`\n Delete: You need add dto model in src/services/dao.services.ts file --- ${model}`)
                 return `Error updating data for model: ${model}`;
             }
         }

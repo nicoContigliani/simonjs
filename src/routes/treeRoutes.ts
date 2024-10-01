@@ -1,65 +1,79 @@
-import Joi from 'joi';
 import { rulesValidations } from '../services/joiValidations.services';
 import { modelsRead } from '../services/modelsRead.services';
 import { businessLogic } from '../services/businessLogic.services';
+import { messageError } from '../services/messageError.services';
 
-const usuarioSchema = Joi.object({
-    nombre: Joi.string().min(3).max(30).required()
+const { performance, PerformanceObserver } = require('perf_hooks');
+
+const obs = new PerformanceObserver((list: any) => {
+    console.log(list.getEntries()[0].duration);
 });
+obs.observe({ entryTypes: ['measure'] });
 
-export const models = modelsRead(); // Example of models
 
-export const generateRoutes = (model: any | undefined) => {
-    const data: any | undefined = rulesValidations;
+// Cargar modelos
+export const models = modelsRead();
 
+// Función para generar rutas
+export const generateRoutes = (model: string | undefined) => {
+    // Validación del modelo antes de proceder
+    if (!model) {
+        throw new Error("Modelo no proporcionado.");
+    }
+
+    // Reglas de validación y lógica de negocio para el modelo
+    const validationSchema: any | any[] | undefined = rulesValidations[model];
     const businessLogicModel = businessLogic[model];
-    return {
 
+    // Función común para manejar peticiones asíncronas
+    const handleRequest = async (operation: () => Promise<any>, h: any) => {
+        try {
+            return await operation();
+        } catch (error) {
+            if (process.env.ENVIRIOMENTS === "developer") {
+                messageError(error);
+            }
+            return h.response({ message: "Error interno del servidor" }).code(500);
+        }
+    };
+
+    return {
         [model]: {
             path: `/${model}/{id?}`,
             methods: {
                 GET: {
-                    handler: (request: { params: { id: any; }; }, h: any) => {
-                        try {
-                            const id = request?.params?.id;
-                            if (id) {
-                                const asyncFuntion = async () => {
-                                    return businessLogic[model]?.GET(id, `${model}`)
-                                }
-                                return asyncFuntion();
-                            } else {
-                                const asyncFuntion = async () => {
+                    handler: async (request: { params: { id: any; }; }, h: any) => {
+                        if (process.env.ENVIRIOMENTS === "developer") performance.mark('start');
 
-                                    return businessLogic[model]?.GET(id, `${model}`)
-                                }
-                                return asyncFuntion();
-                            }
-                        } catch (error) {
-                            console.log("🚀 ~ generateRoutes ~ error:---40", error)
-                        }
+                        const id = request?.params?.id;
+
+                        // GET para una entidad específica o todas
+                        const operation = id
+                            ? () => businessLogicModel?.GET(id, model)
+                            : () => businessLogicModel?.GET(null, model);
+
+                        if (process.env.ENVIRIOMENTS === "developer") performance.mark('end');
+                        if (process.env.ENVIRIOMENTS === "developer") performance.measure('API Call Duration', 'start', 'end');
+
+                        return handleRequest(operation, h);
                     }
                 },
                 POST: {
-                    handler: (request: { payload: any; }, h: { response: (arg0: any) => any; }) => {
-                        const newData = request.payload;
-                        try {
-                            // console.log(`Obteniendo todos los ${model}  ${businessLogic[model].POST(nuevoUsuario)} `)
-                            const asyncFuntion = async () => {
-                                // return businessLogic[model]?.POST( `${nuevoUsuario}`)
-                                // return `Obteniendo todos los ${model}  ${businessLogic[model].POST(nuevoUsuario)} `;
-                                return businessLogic[model]?.POST(newData, `${model}`)
-                            }
-                            return asyncFuntion();
+                    handler: async (request: { payload: any; }, h: { response: (arg0: any) => any; }) => {
+                        if (process.env.ENVIRIOMENTS === "developer") performance.mark('start');
 
-                        } catch (error) {
-                            console.log("🚀 ~ generateRoutes ~ error:--51", error)
-                        }
-                        return h.response(newData).code(201);
+                        const newData = request.payload;
+                        const operation = () => businessLogicModel?.POST(newData, model);
+                        const result = await handleRequest(operation, h);
+
+                        if (process.env.ENVIRIOMENTS === "developer") performance.mark('end');
+                        if (process.env.ENVIRIOMENTS === "developer") performance.measure('API Call Duration', 'start', 'end');
+
+                        return h.response(result).code(201);
                     },
                     options: {
                         validate: {
-                            // payload: usuarioSchema,
-                            payload: data[`${model}`],
+                            payload: validationSchema, // Validación con Joi
                             failAction: (request: any, h: any, err: any) => {
                                 return h.response({ message: err.details[0].message }).code(400).takeover();
                             }
@@ -67,36 +81,28 @@ export const generateRoutes = (model: any | undefined) => {
                     }
                 },
                 PUT: {
-                    handler: (request: { params: { id: any; }; payload: any; }, h: any) => {
+                    handler: async (request: { params: { id: any; }; payload: any; }, h: any) => {
+                        if (process.env.ENVIRIOMENTS === "developer") performance.mark('start');
+
                         const id = request.params.id;
-                        const datosActualizados = request.payload;
-                        console.log("geting put")
+                        const updatedData = request.payload;
 
                         if (!id) {
                             return h.response({ message: 'ID requerido para actualizar.' }).code(400);
                         }
 
-                        try {
-                            const asyncFuntion = async () => {
-                                const si = await businessLogic[model]?.PUT(id, datosActualizados, model)
-                                return await businessLogic[model]?.GET(id, `${model}`)
+                        const operation = async () => {
+                            await businessLogicModel?.PUT(id, updatedData, model);
+                            return businessLogicModel?.GET(id, model);
+                        };
+                        if (process.env.ENVIRIOMENTS === "developer") performance.mark('end');
+                        if (process.env.ENVIRIOMENTS === "developer") performance.measure('API Call Duration', 'start', 'end');
 
-
-                            }
-                            return asyncFuntion();
-                        } catch (error) {
-                            console.log("🚀 ~ generateRoutes ~ error:----82", error)
-
-                        }
-
-                        // return h.response(newData).code(201);
-
-                        // return h.response({ message: `Actualizando ${model} con id ${id}`, datos: datosActualizados }).code(200);
+                        return handleRequest(operation, h);
                     },
                     options: {
                         validate: {
-                            // payload: usuarioSchema,
-                            payload: data[`${model}`],
+                            payload: validationSchema, // Validación con Joi
                             failAction: (request: any, h: any, err: any) => {
                                 return h.response({ message: err.details[0].message }).code(400).takeover();
                             }
@@ -104,25 +110,21 @@ export const generateRoutes = (model: any | undefined) => {
                     }
                 },
                 DELETE: {
-                    handler: (request: { params: { id: any; }; }, h: any) => {
+                    handler: async (request: { params: { id: any; }; }, h: any) => {
+                        if (process.env.ENVIRIOMENTS === "developer") performance.mark('start');
+
                         const id = request.params.id;
 
                         if (!id) {
                             return h.response({ message: 'ID requerido para eliminar.' }).code(400);
                         }
-                        try {
-                            const asyncFuntion = async () => {
 
-                                return `Obteniendo todos los ${model}  ${businessLogic[model].DELETE(id, model)} `;
+                        const operation = () => businessLogicModel?.DELETE(id, model);
 
-                            }
-                            return asyncFuntion();
+                        if (process.env.ENVIRIOMENTS === "developer") performance.mark('end');
+                        if (process.env.ENVIRIOMENTS === "developer") performance.measure('API Call Duration', 'start', 'end');
 
-                        } catch (error) {
-                            console.log("🚀 ~ generateRoutes ~ error:----115", error)
-
-                        }
-                        return h.response({ message: `Eliminando ${model} con id ${id}` }).code(200);
+                        return handleRequest(operation, h);
                     }
                 }
             }

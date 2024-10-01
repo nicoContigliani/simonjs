@@ -15,19 +15,23 @@ interface RouteConfig {
 type RoutesTree = Record<string, RouteConfig>;
 
 const registerRoutes = (server: Server, routesTree: RoutesTree): void => {
-    const routeConfigs:any = Object.entries(routesTree).reduce((acc: Array<{ method: string; path: string; handler: (request: Request, h: ResponseToolkit) => void; options?: Record<string, any> }>, [routeGroup, { path, methods }]: [string, RouteConfig]) => {
-        // Iterate over the methods of each route (GET, POST, PUT, DELETE)
-        const routeEntries = Object.entries(methods).map(([method, { handler, options }]: [string, RouteMethodConfig]) => ({
-            method,
-            path,
-            handler,
-            options
-        }));
-        return acc.concat(routeEntries);
-    }, []);
+    const routeConfigs: any | Array<{ method: string; path: string; handler: (request: Request, h: ResponseToolkit) => void; options?: Record<string, any> }> = [];
 
-    // Register all routes to the server
+    // Iteramos sobre las entradas del árbol de rutas
+    for (const [routeGroup, { path, methods }] of Object.entries(routesTree)) {
+        // Iteramos sobre cada método (GET, POST, etc.)
+        for (const [method, { handler, options }] of Object.entries(methods)) {
+            // Añadimos la configuración de la ruta directamente al array
+            routeConfigs.push({
+                method,
+                path,
+                handler,
+                options
+            });
+        }
+    }
+
+    // Registramos todas las rutas al servidor
     server.route(routeConfigs);
 };
-
 export default registerRoutes;

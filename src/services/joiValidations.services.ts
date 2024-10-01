@@ -1,7 +1,7 @@
 import Joi from 'joi';
 
 
-export const rulesValidations: object = {
+export const rulesValidations:{ [key: string]: Joi.Schema } = {
     User: Joi.object({
         id: Joi.number()
             .min(1)

@@ -7,7 +7,6 @@ import { todoSTart } from './services/simonStart.services';
 import Inert from '@hapi/inert';
 import Vision from '@hapi/vision';
 import HapiSwagger from 'hapi-swagger';
-import dotenv from 'dotenv';
 
 
 const init = async () => {
