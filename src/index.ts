@@ -4,8 +4,18 @@ import Hapi from '@hapi/hapi';
 import registerRoutes from './routes/registerRoutes';
 import { models, generateRoutes } from './routes/treeRoutes';
 import { todoSTart } from './services/simonStart.services';
+import Inert from '@hapi/inert';
+import Vision from '@hapi/vision';
+import HapiSwagger from 'hapi-swagger';
+import dotenv from 'dotenv';
+
+
 const init = async () => {
   todoSTart()
+
+
+  console.log(process.env.JWT_SECRET, "JWT_SECRET")
+
 
   // Inicializar la base de datos
   try {
@@ -19,9 +29,43 @@ const init = async () => {
   // Crear servidor Hapi
   const server = Hapi.server({
     port: 3000, // Puedes cambiar el puerto si es necesario
-    host: 'localhost'
+    host: 'localhost',
+    routes: {
+      cors: true, // Habilitar CORS
+    },
   });
 
+  // Registra Inert y Hapi-Swagger
+  await server.register([
+    Inert,
+    Vision,
+    {
+      plugin: HapiSwagger,
+      options: {
+        info: {
+          title: 'Mi API',
+          version: "0.0.1",
+        },
+        documentationPage: true,
+        documentationPath: '/documentation', // Cambiar la ruta si es necesario
+      },
+    },
+  ]);
+
+
+  // Define una ruta de ejemplo
+  const exampleRoute: Hapi.ServerRoute = {
+    method: 'GET',
+    path: '/api/example',
+    options: {
+      tags: ['api'], // Aquí se puede usar 'tags' sin errores
+      handler: (request, h) => {
+        return { message: 'Hello, World!' };
+      },
+    },
+  };
+
+  server.route(exampleRoute); // Usa la nueva ruta
 
   // Definir una ruta de prueba
   server.route({
@@ -45,6 +89,7 @@ const init = async () => {
   await server.start();
   console.log('Server running on %s', server.info.uri);
 };
+console.log("🚀 ~ init ~  process.env.JWT_SECRET:", process.env.JWT_SECRET)
 
 // Manejar errores no controlados
 process.on('unhandledRejection', (err) => {

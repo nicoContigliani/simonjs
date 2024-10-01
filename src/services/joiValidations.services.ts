@@ -29,7 +29,6 @@ export const rulesValidations: object = {
                 'any.required': 'Name is required'
             }),
 
-
         lastName: Joi.string()
             .min(3) // Longitud mínima de 3 caracteres
             .max(30) // Longitud máxima de 30 caracteres
@@ -40,6 +39,15 @@ export const rulesValidations: object = {
                 'any.required': 'Name is required'
             }),
 
+        password: Joi.string()
+            .min(3) // Longitud mínima de 3 caracteres
+            .max(30) // Longitud máxima de 30 caracteres
+            .required() // Campo requerido
+            .messages({
+                'string.min': 'Name must be at least 3 characters long',
+                'string.max': 'Name must be less than 30 characters long',
+                'any.required': 'Name is required'
+            }),
 
         age: Joi.number()
             .min(18) // Edad mínima de 18
