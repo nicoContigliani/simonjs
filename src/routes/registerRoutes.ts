@@ -18,9 +18,9 @@ const registerRoutes = (server: Server, routesTree: RoutesTree): void => {
     const routeConfigs: any | Array<{ method: string; path: string; handler: (request: Request, h: ResponseToolkit) => void; options?: Record<string, any> }> = [];
 
     // Iteramos sobre las entradas del árbol de rutas
-    for (const [routeGroup, { path, methods }] of Object.entries(routesTree)) {
+    for (const [routeGroup, { path, methods }] of Object?.entries(routesTree)) {
         // Iteramos sobre cada método (GET, POST, etc.)
-        for (const [method, { handler, options }] of Object.entries(methods)) {
+        for (const [method, { handler, options }] of Object?.entries(methods)) {
             // Añadimos la configuración de la ruta directamente al array
             routeConfigs.push({
                 method,

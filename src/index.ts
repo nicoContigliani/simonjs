@@ -34,6 +34,8 @@ const init = async () => {
     },
   });
 
+
+  
   // Registra Inert y Hapi-Swagger
   await server.register([
     Inert,

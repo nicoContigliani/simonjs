@@ -2,6 +2,11 @@ import { rulesValidations } from '../services/joiValidations.services';
 import { modelsRead } from '../services/modelsRead.services';
 import { businessLogic } from '../services/businessLogic.services';
 import { messageError } from '../services/messageError.services';
+import { dao, daoDinamic } from '../services/dao.services';
+
+
+
+
 
 const { performance, PerformanceObserver } = require('perf_hooks');
 
@@ -9,6 +14,14 @@ const obs = new PerformanceObserver((list: any) => {
     console.log(list.getEntries()[0].duration);
 });
 obs.observe({ entryTypes: ['measure'] });
+
+const warningMessage = (model?: string | undefined, message?: string) => {
+    console.log("****************************************************************************************************************************************************")
+    console.log("**************", model, "Warning You are using dinamic model but you neet create dto model in src/services/dao.services.ts file --******************")
+    console.log("****************************************************************************************************************************************************")
+
+}
+
 
 
 // Cargar modelos
@@ -47,10 +60,21 @@ export const generateRoutes = (model: string | undefined) => {
 
                         const id = request?.params?.id;
 
+                        if ((!businessLogicModel?.GET(id, model)
+                            && !businessLogicModel?.GET(null, model))
+                            && process.env.ENVIRIOMENTS === "developer") {
+                            warningMessage(model)
+                        }
+
                         // GET para una entidad específica o todas
-                        const operation = id
-                            ? () => businessLogicModel?.GET(id, model)
-                            : () => businessLogicModel?.GET(null, model);
+                        const operation = (!businessLogicModel?.GET(id, model) && !businessLogicModel?.GET(null, model)) ?
+                            id
+                                ? () => daoDinamic?.getId(model, id)
+                                : () => daoDinamic?.get(model)
+                            :
+                            id
+                                ? () => businessLogicModel?.GET(id, model)
+                                : () => businessLogicModel?.GET(null, model);
 
                         if (process.env.ENVIRIOMENTS === "developer") performance.mark('end');
                         if (process.env.ENVIRIOMENTS === "developer") performance.measure('API Call Duration', 'start', 'end');
@@ -60,10 +84,21 @@ export const generateRoutes = (model: string | undefined) => {
                 },
                 POST: {
                     handler: async (request: { payload: any; }, h: { response: (arg0: any) => any; }) => {
-                        if (process.env.ENVIRIOMENTS === "developer") performance.mark('start');
 
+
+                        if (process.env.ENVIRIOMENTS === "developer") performance.mark('start');
                         const newData = request.payload;
-                        const operation = () => businessLogicModel?.POST(newData, model);
+
+                        if (!businessLogicModel?.POST(newData, model) && (process.env.ENVIRIOMENTS === "developer")) {
+                            warningMessage(model)
+
+                            if (!newData) throw new Error('It didnt receive any data');
+                        }
+
+                        const operation = () => (!businessLogicModel?.POST(newData, model)) ?
+                            daoDinamic?.post(newData, model) :
+                            businessLogicModel?.POST(newData, model);
+
                         const result = await handleRequest(operation, h);
 
                         if (process.env.ENVIRIOMENTS === "developer") performance.mark('end');
@@ -85,16 +120,21 @@ export const generateRoutes = (model: string | undefined) => {
                         if (process.env.ENVIRIOMENTS === "developer") performance.mark('start');
 
                         const id = request.params.id;
-                        const updatedData = request.payload;
+                        const updatedData = request?.payload;
+
+                        if (!businessLogicModel?.PUT(updatedData, model) && (process.env.ENVIRIOMENTS === "developer")) {
+                            warningMessage(model)
+                            if (!updatedData) throw new Error('It didnt receive any data');
+                        }
 
                         if (!id) {
                             return h.response({ message: 'ID requerido para actualizar.' }).code(400);
                         }
 
-                        const operation = async () => {
-                            await businessLogicModel?.PUT(id, updatedData, model);
-                            return businessLogicModel?.GET(id, model);
-                        };
+                        const operation = !businessLogicModel?.PUT(id, updatedData, model) ?
+                            async () => await daoDinamic?.update(updatedData, id, model) :
+                            async () => await businessLogicModel?.PUT(id, updatedData, model);
+
                         if (process.env.ENVIRIOMENTS === "developer") performance.mark('end');
                         if (process.env.ENVIRIOMENTS === "developer") performance.measure('API Call Duration', 'start', 'end');
 
@@ -110,22 +150,31 @@ export const generateRoutes = (model: string | undefined) => {
                     }
                 },
                 DELETE: {
-                    handler: async (request: { params: { id: any; }; }, h: any) => {
+
+                    handler: async (request: { params: { id: any; }; payload: any; }, h: any) => {
                         if (process.env.ENVIRIOMENTS === "developer") performance.mark('start');
 
                         const id = request.params.id;
+                        const data = { [`status_${model}`]: false };
 
-                        if (!id) {
-                            return h.response({ message: 'ID requerido para eliminar.' }).code(400);
+
+                        if (!businessLogicModel?.DELETE(id, model) && (process.env.ENVIRIOMENTS === "developer")) {
+                            warningMessage(model)
+                            if (!id) {
+                                return h.response({ message: 'ID requerido for delete.' }).code(400);
+                            }
                         }
 
-                        const operation = () => businessLogicModel?.DELETE(id, model);
+
+                        const operation = !businessLogicModel?.DELETE(id, model) ?
+                            async () => await await daoDinamic?.delete(data, id) :
+                            async () => await businessLogicModel?.DELETE(id, model);
 
                         if (process.env.ENVIRIOMENTS === "developer") performance.mark('end');
                         if (process.env.ENVIRIOMENTS === "developer") performance.measure('API Call Duration', 'start', 'end');
 
                         return handleRequest(operation, h);
-                    }
+                    },
                 }
             }
         }

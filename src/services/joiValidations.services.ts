@@ -1,7 +1,7 @@
 import Joi from 'joi';
 
 
-export const rulesValidations:{ [key: string]: Joi.Schema } = {
+export const rulesValidations: { [key: string]: Joi.Schema } = {
     User: Joi.object({
         id: Joi.number()
             .min(1)
@@ -175,7 +175,42 @@ export const rulesValidations:{ [key: string]: Joi.Schema } = {
             .messages({
                 'string.min': 'Name must be at least 3 characters long',
             }),
+    }),
+    Todo: Joi.object({
+        id: Joi.number()
+            .min(1)
+            .optional() // El id es opcional
+            .messages({
+                'number.base': 'ID must be a number',
+                'number.min': 'ID must be greater than or equal to 1'
+            }),
+        firstName: Joi.string()
+            .min(3) // Longitud mínima de 3 caracteres
+            .max(30) // Longitud máxima de 30 caracteres
+            .optional() // Campo requerido
+            .messages({
+                'string.email': 'Invalid email address',
+                'any.required': 'Email is required'
+            }),
 
+        lastName: Joi.string()
+            .min(3) // Longitud mínima de 3 caracteres
+            .max(30) // Longitud máxima de 30 caracteres
+            .optional() // Campo requerido
+            .messages({
+                'string.min': 'Name must be at least 3 characters long',
+                'string.max': 'Name must be less than 30 characters long',
+                'any.required': 'Name is required'
+            }),
+        age: Joi.number()
+            .min(18) // Edad mínima de 18
+            .max(150) // Edad máxima de 150
+            .messages({
+                'number.min': 'Invalid age, must be at least 18',
+                'number.max': 'Invalid age, must be at most 150'
+            }),
+        status_Todo: Joi.bool()
+            .optional()
 
     }),
 

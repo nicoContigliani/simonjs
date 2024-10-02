@@ -2,10 +2,6 @@ import { AppDataSource } from '../ormconfig';
 import { dao } from './dao.services';
 import { messageError } from './messageError.services';
 
-
-
-
-
 export const businessLogic: any = {
     User: {
         GET: async (id: any | undefined, model: any) => {
@@ -30,7 +26,7 @@ export const businessLogic: any = {
                 return todo
 
             } catch (error) {
-               if(process.env.ENVIRIOMENTS==="developer") messageError("\n You need add dto model in src/services/dao.services.ts file")
+                if (process.env.ENVIRIOMENTS === "developer") messageError("\n You need add dto model in src/services/dao.services.ts file")
                 return `Error fetching data for model: ${model}`;
             }
 
@@ -40,7 +36,7 @@ export const businessLogic: any = {
                 const todo = await dao[model].post(data);
                 return todo
             } catch (error) {
-                if(process.env.ENVIRIOMENTS==="developer") messageError(`\n Post: You need add dto model in src/services/dao.services.ts file --- ${model}`)
+                if (process.env.ENVIRIOMENTS === "developer") messageError(`\n Post: You need add dto model in src/services/dao.services.ts file --- ${model}`)
                 return `Error fetching data for model: ${model}`;
             }
         },
@@ -57,8 +53,8 @@ export const businessLogic: any = {
 
             } catch (error: any) {
 
-                if(process.env.ENVIRIOMENTS==="developer") messageError(`\n Put: You need add dto model in src/services/dao.services.ts file --- ${model}`)
-                    return `Error updating data for model: ${model}`;
+                if (process.env.ENVIRIOMENTS === "developer") messageError(`\n Put: You need add dto model in src/services/dao.services.ts file --- ${model}`)
+                return `Error updating data for model: ${model}`;
             }
 
             // return `user updated ${data}-----|----${id}`
@@ -76,7 +72,7 @@ export const businessLogic: any = {
                 return updatedRecord;
 
             } catch (error: any) {
-                if(process.env.ENVIRIOMENTS==="developer") messageError(`\n Delete: You need add dto model in src/services/dao.services.ts file --- ${model}`)
+                if (process.env.ENVIRIOMENTS === "developer") messageError(`\n Delete: You need add dto model in src/services/dao.services.ts file --- ${model}`)
                 return `Error updating data for model: ${model}`;
             }
         }
@@ -115,8 +111,84 @@ export const businessLogic: any = {
             return `user deleted -----|----${id}`
         }
     },
+    Def: {
+        GET: async (id: any | undefined, model: any, modelDinamic: any) => {
+            console.log("***********Default**************")
+
+            if (id) {
+                try {
+                    // Si se proporciona un ID, obtenemos la entidad específica por ID
+                    const todo = await dao[model].getid(id);
+                    if (todo) {
+                        return todo;  // Retorna la entidad encontrada
+                    } else {
+                        return `No item found with ID ${id} for model ${model}`;
+                    }
+                } catch (error) {
+                    console.error(`Error fetching item by ID: ${id} for model: ${model}`, error);
+                    return `Error fetching item by ID ${id} for model ${model}`;
+                }
+            }
+
+            try {
+                console.log("***********Default**************")
+
+                const todo = await dao[model].get();
+                return todo
+
+            } catch (error) {
+                console.log("🚀 ~ error: -16-", error);
+                return `Error fetching data for model: ${model}`;
+            }
+
+        },
+        POST: async (data: any[] | any | undefined, model: any) => {
+            try {
+                const todo = await dao[model].post(data);
+                return todo
+            } catch (error) {
+                console.log("🚀 ~ error: -16-", error, `Error fetching data for model: ${model}`);
+                return `Error fetching data for model: ${model}`;
+            }
+        },
+        PUT: async (id: string | number, data: any[] | any | undefined, model: any) => {
+
+            try {
+                // Verifica si 'id' y 'data' son válidos
+                if (!id || !data) {
+                    throw new Error("Missing 'id' or 'data' for update operation");
+                }
+
+                const updatedRecord = await dao[model].put(data, id);
+                return updatedRecord;
+
+            } catch (error: any) {
+                console.log("🚀 ~ error: -131-", error.messages, `Error updating data for model: ${model}`);
+                return `Error updating data for model: ${model}`;
+            }
+
+            // return `user updated ${data}-----|----${id}`
+        },
+        DELETE: async (id: string | number, model: any) => {
+
+            // Crear el objeto con la clave dinámica y el valor asignado
+            const data = { [`status_${model}`]: false };
+            try {
+                // Verifica si 'id' y 'data' son válidos
+                if (!id || !data) {
+                    throw new Error("Missing 'id' or 'data' for delete operation");
+                }
+                const updatedRecord = await dao[model].put(data, id);
+                return updatedRecord;
+
+            } catch (error: any) {
+                console.log("🚀 ~ error: -131-", error.messages, `Error delete data for model: ${model}`);
+                return `Error updating data for model: ${model}`;
+            }
+        }
+    },
     Evaluation: {
-        GET: async (id: any | undefined, model: any) => {
+        GET: async (id: any | undefined, model: any, modelDinamic: any) => {
 
             if (id) {
                 try {
@@ -187,12 +259,7 @@ export const businessLogic: any = {
                 return `Error updating data for model: ${model}`;
             }
         }
-    }
-
-}
-
-export const si: any = {
-    get: "si"
+    },
 }
 
 
