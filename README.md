@@ -1,4 +1,4 @@
-# SimónJS
+# SimonJS
 
 ![alt text](https://t3.ftcdn.net/jpg/06/05/60/42/360_F_605604247_hP7A7P7jQphIKnhG3tqLX4o7V3Z3cTGM.jpg)
 
@@ -6,7 +6,7 @@ This project is a Hapi.js-based API with TypeORM for database management, Swagge
 
 ## Table of Contents
 
-- [SimónJS](#simónjs)
+- [SimonJS](#simonjs)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Scripts](#scripts)
