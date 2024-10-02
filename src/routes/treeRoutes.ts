@@ -3,6 +3,7 @@ import { modelsRead } from '../services/modelsRead.services';
 import { businessLogic } from '../services/businessLogic.services';
 import { messageError } from '../services/messageError.services';
 import { dao, daoDinamic } from '../services/dao.services';
+import { options } from 'joi';
 
 
 
@@ -55,7 +56,8 @@ export const generateRoutes = (model: string | undefined) => {
             path: `/${model}/{id?}`,
             methods: {
                 GET: {
-                    handler: async (request: { params: { id: any; }; }, h: any) => {
+
+                    handler: async (request: { params: { id: string | number; }; }, h: any) => {
                         if (process.env.ENVIRIOMENTS === "developer") performance.mark('start');
 
                         const id = request?.params?.id;
@@ -80,6 +82,10 @@ export const generateRoutes = (model: string | undefined) => {
                         if (process.env.ENVIRIOMENTS === "developer") performance.measure('API Call Duration', 'start', 'end');
 
                         return handleRequest(operation, h);
+                    },
+                    options: {
+                        tags: ['api', 'getModel'], // Esto se mostrará en Swagger
+                        description: 'Obtiene un modelo específico o todos'
                     }
                 },
                 POST: {
@@ -112,11 +118,13 @@ export const generateRoutes = (model: string | undefined) => {
                             failAction: (request: any, h: any, err: any) => {
                                 return h.response({ message: err.details[0].message }).code(400).takeover();
                             }
-                        }
+                        },
+                        tags: ['api', 'postModel'], // Esto se mostrará en Swagger
+                        description: 'Obtiene un modelo específico o todos',
                     }
                 },
                 PUT: {
-                    handler: async (request: { params: { id: any; }; payload: any; }, h: any) => {
+                    handler: async (request: { params: { id: string | number; }; payload: any; }, h: any) => {
                         if (process.env.ENVIRIOMENTS === "developer") performance.mark('start');
 
                         const id = request.params.id;
@@ -146,12 +154,15 @@ export const generateRoutes = (model: string | undefined) => {
                             failAction: (request: any, h: any, err: any) => {
                                 return h.response({ message: err.details[0].message }).code(400).takeover();
                             }
-                        }
+                        },
+                        tags: ['api', 'putModel'], // Esto se mostrará en Swagger
+                        description: 'Obtiene un modelo específico o todos',
+
                     }
                 },
                 DELETE: {
 
-                    handler: async (request: { params: { id: any; }; payload: any; }, h: any) => {
+                    handler: async (request: { params: { id: string | number; }; payload: any; }, h: any) => {
                         if (process.env.ENVIRIOMENTS === "developer") performance.mark('start');
 
                         const id = request.params.id;
@@ -175,6 +186,10 @@ export const generateRoutes = (model: string | undefined) => {
 
                         return handleRequest(operation, h);
                     },
+                    options: {
+                        tags: ['api', 'deleteModel'], // Esto se mostrará en Swagger
+                        description: 'Obtiene un modelo específico o todos'
+                    }
                 }
             }
         }

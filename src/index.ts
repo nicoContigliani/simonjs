@@ -13,9 +13,6 @@ const init = async () => {
   todoSTart()
 
 
-  console.log(process.env.JWT_SECRET, "JWT_SECRET")
-
-
   // Inicializar la base de datos
   try {
     await AppDataSource.initialize();
@@ -44,7 +41,7 @@ const init = async () => {
       plugin: HapiSwagger,
       options: {
         info: {
-          title: 'Mi API',
+          title: 'SIMONJS API',
           version: "0.0.1",
         },
         documentationPage: true,
