@@ -1,5 +1,7 @@
 # SimónJS
-https://t3.ftcdn.net/jpg/06/05/60/42/360_F_605604247_hP7A7P7jQphIKnhG3tqLX4o7V3Z3cTGM.jpg
+
+![alt text](https://t3.ftcdn.net/jpg/06/05/60/42/360_F_605604247_hP7A7P7jQphIKnhG3tqLX4o7V3Z3cTGM.jpg)
+
 This project is a Hapi.js-based API with TypeORM for database management, Swagger for API documentation, and various other features.
 
 ## Table of Contents
