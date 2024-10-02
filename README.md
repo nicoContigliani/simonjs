@@ -1,13 +1,14 @@
-# Simón
-
+# SimónJS
+https://t3.ftcdn.net/jpg/06/05/60/42/360_F_605604247_hP7A7P7jQphIKnhG3tqLX4o7V3Z3cTGM.jpg
 This project is a Hapi.js-based API with TypeORM for database management, Swagger for API documentation, and various other features.
 
 ## Table of Contents
 
-- [Simón](#simón)
+- [SimónJS](#simónjs)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
   - [Scripts](#scripts)
+  - [file -\> .env](#file---env)
 
 ## Installation
 
@@ -43,8 +44,8 @@ API documentation will be available at `http://localhost:3000/documentation`.
 - `test:integration`: Run integration tests
 - `test:coverage`: Run tests with coverage report
 
-.env
-DB_HOST=localhost
+## file -> .env
+ DB_HOST=localhost
 DB_PORT=5432
 DB_USERNAME=*****
 DB_PASSWORD=**********
