@@ -10,27 +10,35 @@ export const dao: any = {
     // DAO for the Evaluation model
     User: {
         get: async () => {
-            const Entity = await entities('Evaluation');
+            const Entity = await entities('User');
             const repository = AppDataSource.getRepository(Entity);
             const items = await repository.find();
             return items;
         },
         getid: async (id: any) => {
-            const Entity = await entities('Evaluation');
+            const Entity = await entities('User');
             const repository = AppDataSource.getRepository(Entity);
             const item = await repository.findOne({
                 where: { id },  // Searches by the 'id' field
             });
             return item;
         },
+        getByFilters: async (filters: any) => {
+            const Entity = await entities('User');
+            const repository = AppDataSource.getRepository(Entity);
+            const item = await repository.findOne({
+                where: { filters },  // Searches by the 'filters' field
+            });
+            return item;
+        },
         post: async (data: any) => {
-            const Entity = await entities('Evaluation');
+            const Entity = await entities('User');
             const repository = AppDataSource.getRepository(Entity);
             return await repository.save(data);
         },
         put: async (data: any, id: any) => {
             console.log("🚀 ~ put: ~ data:", data);
-            const Entity = await entities('Evaluation');
+            const Entity = await entities('User');
             const repository = await AppDataSource.getRepository(Entity);
             try {
                 const updateResult = await repository.update(id, data);
@@ -95,6 +103,30 @@ export const dao: any = {
             }
         },
     },
+    register: {
+        post: async (data: any) => {
+            const Entity = await entities('User');
+            const repository = AppDataSource.getRepository(Entity);
+            return await repository.save(data);
+        }
+    },
+    login: {
+        getByFilters: async (filters: any) => {
+            const Entity = await entities('User');
+            const repository = AppDataSource.getRepository(Entity);
+            const item = await repository.findOne({
+                where: { filters },  // Searches by the 'filters' field
+            });
+            return item;
+        },
+        post: async (data: any) => {
+            const Entity = await entities('User');
+            const repository = AppDataSource.getRepository(Entity);
+            return await repository.save(data);
+        }
+    },
+
+
     default: {
         get: async () => {
             const Entity = await entities('Evaluation');

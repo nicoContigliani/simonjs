@@ -1,4 +1,5 @@
 import { AppDataSource } from '../ormconfig';
+import { generateToken } from '../utils/jwtUtils';
 import { dao } from './dao.services';
 import { messageError } from './messageError.services';
 
@@ -248,4 +249,41 @@ export const businessLogic: any = {
             }
         }
     },
+    register: {
+        POST: async (data: any[] | any | undefined, model: any) => {
+            try {
+                // Register logic
+                const newUser = await dao[model].post(data);
+                return newUser;
+            } catch (error) {
+                console.log("🚀 ~ error in register POST:", error, `Error posting data for model: ${model}`);
+                return `Error during registration for model: ${model}`;
+            }
+        }
+    },
+    login: {
+        POST: async (credentials: any|undefined, model: any|undefined) => {
+            console.log("si*************************")
+            try {
+                // Fetch the user by email or username from credentials
+                const user = await dao[model].getByFilters('email', credentials.email);
+                if (!user) {
+                    return 'User not found';
+                }
+                return user
+                // // Validate the password (assuming a comparePassword method exists)
+                // const isValidPassword = await user.comparePassword(credentials.password);
+                // if (!isValidPassword) {
+                //     return 'Invalid credentials';
+                // }
+
+                // // If valid, generate and return a token (assuming token generation logic exists)
+                // const token = generateToken(user);
+                // return { message: 'Login successful', token };
+            } catch (error) {
+                console.log("🚀 ~ error in login POST:", error, `Error during login for model: ${model}`);
+                return `Error during login for model: ${model}`;
+            }
+        }
+    }
 };

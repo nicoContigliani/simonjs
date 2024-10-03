@@ -56,7 +56,7 @@ export const rulesValidations: { [key: string]: Joi.Schema } = {
                 'number.min': 'Invalid age, must be at least 18',
                 'number.max': 'Invalid age, must be at most 150'
             })
-    }),
+    }).label('User Model'),
 
     Yo: Joi.object({
         id: Joi.number()
@@ -92,7 +92,7 @@ export const rulesValidations: { [key: string]: Joi.Schema } = {
                 'number.min': 'Invalid age, must be at least 18',
                 'number.max': 'Invalid age, must be at most 150'
             })
-    }),
+    }).label('Yo Model'),
     Product: Joi.object({
         id: Joi.number()
             .min(1)
@@ -134,7 +134,7 @@ export const rulesValidations: { [key: string]: Joi.Schema } = {
                 'number.min': 'Invalid age, must be at least 18',
                 'number.max': 'Invalid age, must be at most 150'
             })
-    }),
+    }).label('Product Model'),
     Evaluation: Joi.object({
         id: Joi.alternatives().try(
             Joi.number().min(1),         // Permite números con un valor mínimo de 1
@@ -175,7 +175,7 @@ export const rulesValidations: { [key: string]: Joi.Schema } = {
             .messages({
                 'string.min': 'Name must be at least 3 characters long',
             }),
-    }),
+    }).label('Evaluation Model'),
     Todo: Joi.object({
         id: Joi.number()
             .min(1)
@@ -212,7 +212,7 @@ export const rulesValidations: { [key: string]: Joi.Schema } = {
         status_Todo: Joi.bool()
             .optional()
 
-    }),
+    }).label('Todo Model'),
 
 }
 

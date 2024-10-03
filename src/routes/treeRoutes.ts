@@ -84,7 +84,7 @@ export const generateRoutes = (model: string | undefined) => {
 
                         return handleRequest(operation, h);
                     },
-            
+
                     options: {
                         tags: ['api', 'getModel'], // Esto se mostrará en Swagger
                         description: 'Obtiene un modelo específico o todos',
@@ -106,7 +106,9 @@ export const generateRoutes = (model: string | undefined) => {
                                     400: { description: 'Solicitud incorrecta - Parámetros inválidos' }
                                 }
                             }
-                        }
+                        },
+                        auth: 'jwt',
+
                     }
                 },
                 POST: {
@@ -161,6 +163,7 @@ export const generateRoutes = (model: string | undefined) => {
                         //         }
                         //     }
                         // }
+                        auth: 'jwt',
                     }
                 },
                 PUT: {
@@ -220,6 +223,7 @@ export const generateRoutes = (model: string | undefined) => {
                         //         }
                         //     }
                         // }
+                        auth: 'jwt',
                     }
                 },
                 DELETE: {
@@ -270,9 +274,11 @@ export const generateRoutes = (model: string | undefined) => {
                         //         }
                         //     }
                         // }
+                        auth: 'jwt',
                     }
                 }
             }
-        }
+        },
+  
     }
 };

@@ -1,12 +1,15 @@
 import 'reflect-metadata';
-import { AppDataSource } from './ormconfig';
 import Hapi from '@hapi/hapi';
+import Jwt from '@hapi/jwt'; // Importación de @hapi/jwt
+import { AppDataSource } from './ormconfig';
 import registerRoutes from './routes/registerRoutes';
 import { models, generateRoutes } from './routes/treeRoutes';
 import { todoSTart } from './services/simonStart.services';
-import Inert from '@hapi/inert';
-import Vision from '@hapi/vision';
-import HapiSwagger from 'hapi-swagger';
+import authService from './services/auth.services';
+import { registerJwtStrategy } from './utils/jwtStrategy';
+import { swaggerConfiguration } from './utils/swaggerConfigurationUtils';
+
+
 
 const init = async () => {
     todoSTart(); // This function's purpose is not clear from the provided code.
@@ -21,30 +24,27 @@ const init = async () => {
     }
 
     // Create a Hapi.js server instance
-     const server = Hapi.server({
+    const server = Hapi.server({
         port: 3000, // You can change the port if needed
         host: 'localhost',
         routes: {
             cors: true, // Enable Cross-Origin Resource Sharing
         },
     });
-
+    
     // Register plugins for serving static content, templating, and generating API documentation
-    await server.register([
-        Inert,
-        Vision,
-        {
-            plugin: HapiSwagger,
-            options: {
-                info: {
-                    title: 'SIMONJS API',
-                    version: "0.0.1",
-                },
-                documentationPage: true,
-                documentationPath: '/documentation',
-            },
-        },
-    ]);
+    await swaggerConfiguration(server)
+    
+    // Registrar el plugin @hapi/jwt
+    await server.register(Jwt);
+
+    // Registrar la estrategia JWT
+    registerJwtStrategy(server);
+
+    // Registrar la  auth service - sepate logic auth and other services
+    authService(server);
+
+
 
     // Define a sample route for testing
     server.route({
@@ -66,6 +66,8 @@ const init = async () => {
     // Start the server
     await server.start();
     console.log('Server running on %s', server.info.uri);
+    if (process.env.ENVIRIOMENTS === "developer") console.log('Documentation API', `${server.info.uri}/documentation`);
+
 };
 
 // Handle uncaught promise rejections
