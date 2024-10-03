@@ -8,92 +8,71 @@ import Inert from '@hapi/inert';
 import Vision from '@hapi/vision';
 import HapiSwagger from 'hapi-swagger';
 
-
 const init = async () => {
-  todoSTart()
+    todoSTart(); // This function's purpose is not clear from the provided code.
 
-
-  // Inicializar la base de datos
-  try {
-    await AppDataSource.initialize();
-    console.log('Database connected');
-  } catch (error: any) {
-    console.error('Error during Data Source initialization:', error);
-    process.exit(1); // Salir si hay un error
-  }
-
-  // Crear servidor Hapi
-  const server = Hapi.server({
-    port: 3000, // Puedes cambiar el puerto si es necesario
-    host: 'localhost',
-    routes: {
-      cors: true, // Habilitar CORS
-    },
-  });
-
-
-  
-  // Registra Inert y Hapi-Swagger
-  await server.register([
-    Inert,
-    Vision,
-    {
-      plugin: HapiSwagger,
-      options: {
-        info: {
-          title: 'SIMONJS API',
-          version: "0.0.1",
-        },
-        documentationPage: true,
-        documentationPath: '/documentation', // Cambiar la ruta si es necesario
-      },
-    },
-  ]);
-
-
-  // Define una ruta de ejemplo
-  const exampleRoute: Hapi.ServerRoute = {
-    method: 'GET',
-    path: '/api/example',
-    options: {
-      tags: ['api'], // Aquí se puede usar 'tags' sin errores
-      handler: (request, h) => {
-        return { message: 'Hello, World!' };
-      },
-    },
-  };
-
-  server.route(exampleRoute); // Usa la nueva ruta
-
-  // Definir una ruta de prueba
-  server.route({
-    method: 'GET',
-    path: '/',
-    handler: (request, h) => {
-      return 'Hello, Hapi!';
+    // Initialize the database connection
+    try {
+        await AppDataSource.initialize();
+        console.log('Database connected');
+    } catch (error) {
+        console.error('Error during Data Source initialization:', error);
+        process.exit(1); // Exit process if there's an error
     }
-  });
 
-  // Generate routes based on models
-  const treeRoutes = models.reduce((acc: any, model: any) => {
-    return { ...acc, ...generateRoutes(model) };
-  }, {});
+    // Create a Hapi.js server instance
+     const server = Hapi.server({
+        port: 3000, // You can change the port if needed
+        host: 'localhost',
+        routes: {
+            cors: true, // Enable Cross-Origin Resource Sharing
+        },
+    });
 
-  registerRoutes(server, treeRoutes);
+    // Register plugins for serving static content, templating, and generating API documentation
+    await server.register([
+        Inert,
+        Vision,
+        {
+            plugin: HapiSwagger,
+            options: {
+                info: {
+                    title: 'SIMONJS API',
+                    version: "0.0.1",
+                },
+                documentationPage: true,
+                documentationPath: '/documentation',
+            },
+        },
+    ]);
 
+    // Define a sample route for testing
+    server.route({
+        method: 'GET',
+        path: '/',
+        handler: (request, h) => {
+            return 'Hello, Hapi!';
+        }
+    });
 
+    // Generate routes dynamically based on models
+    const treeRoutes = models.reduce((acc, model) => {
+        return { ...acc, ...generateRoutes(model) };
+    }, {});
 
-  // Iniciar el servidor
-  await server.start();
-  console.log('Server running on %s', server.info.uri);
+    // Register the dynamically generated routes
+    registerRoutes(server, treeRoutes);
+
+    // Start the server
+    await server.start();
+    console.log('Server running on %s', server.info.uri);
 };
-console.log("🚀 ~ init ~  process.env.JWT_SECRET:", process.env.JWT_SECRET)
 
-// Manejar errores no controlados
+// Handle uncaught promise rejections
 process.on('unhandledRejection', (err) => {
-  console.log(err);
-  process.exit(1);
+    console.log(err);
+    process.exit(1);
 });
-// Llamar a la función de inicialización
-init();
 
+// Start the application
+init();

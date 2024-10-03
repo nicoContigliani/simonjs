@@ -17,11 +17,11 @@ type RoutesTree = Record<string, RouteConfig>;
 const registerRoutes = (server: Server, routesTree: RoutesTree): void => {
     const routeConfigs: any | Array<{ method: string; path: string; handler: (request: Request, h: ResponseToolkit) => void; options?: Record<string, any> }> = [];
 
-    // Iteramos sobre las entradas del árbol de rutas
+    // We iterate over the entries in the route tree
     for (const [routeGroup, { path, methods }] of Object?.entries(routesTree)) {
-        // Iteramos sobre cada método (GET, POST, etc.)
+        // We iterate over each method (GET, POST, etc.)
         for (const [method, { handler, options }] of Object?.entries(methods)) {
-            // Añadimos la configuración de la ruta directamente al array
+            // We add the route configuration directly to the array
             routeConfigs.push({
                 method,
                 path,
@@ -31,7 +31,7 @@ const registerRoutes = (server: Server, routesTree: RoutesTree): void => {
         }
     }
 
-    // Registramos todas las rutas al servidor
+    // We register all routes to the server
     server.route(routeConfigs);
 };
 export default registerRoutes;

@@ -4,6 +4,7 @@ import { businessLogic } from '../services/businessLogic.services';
 import { messageError } from '../services/messageError.services';
 import { dao, daoDinamic } from '../services/dao.services';
 import { options } from 'joi';
+import Joi from 'joi';
 
 
 
@@ -32,7 +33,7 @@ export const models = modelsRead();
 export const generateRoutes = (model: string | undefined) => {
     // Validación del modelo antes de proceder
     if (!model) {
-        throw new Error("Modelo no proporcionado.");
+        throw new Error("Invalid model.");
     }
 
     // Reglas de validación y lógica de negocio para el modelo
@@ -47,7 +48,7 @@ export const generateRoutes = (model: string | undefined) => {
             if (process.env.ENVIRIOMENTS === "developer") {
                 messageError(error);
             }
-            return h.response({ message: "Error interno del servidor" }).code(500);
+            return h.response({ message: "Internal server error" }).code(500);
         }
     };
 
@@ -83,9 +84,29 @@ export const generateRoutes = (model: string | undefined) => {
 
                         return handleRequest(operation, h);
                     },
+            
                     options: {
                         tags: ['api', 'getModel'], // Esto se mostrará en Swagger
-                        description: 'Obtiene un modelo específico o todos'
+                        description: 'Obtiene un modelo específico o todos',
+                        response: {
+                            status: {
+                                //         200: Joi.object({
+                                //             success: Joi.boolean().description('Estado de la respuesta'),
+                                //             data: Joi.any().description('Datos del modelo o lista de modelos')
+                                //         }),
+                                //         400: Joi.object({
+                                //             error: Joi.string().description('Error de validación')
+                                //         })
+                            }
+                        },
+                        plugins: {
+                            'hapi-swagger': {
+                                responses: {
+                                    200: { description: 'OK - Modelo o lista de modelos obtenidos exitosamente' },
+                                    400: { description: 'Solicitud incorrecta - Parámetros inválidos' }
+                                }
+                            }
+                        }
                     }
                 },
                 POST: {
@@ -121,6 +142,25 @@ export const generateRoutes = (model: string | undefined) => {
                         },
                         tags: ['api', 'postModel'], // Esto se mostrará en Swagger
                         description: 'Obtiene un modelo específico o todos',
+                        // response: {
+                        //     status: {
+                        //         201: Joi.object({
+                        //             success: Joi.boolean().description('Indica si la creación fue exitosa'),
+                        //             data: Joi.any().description('Datos del modelo creado')
+                        //         }),
+                        //         400: Joi.object({
+                        //             error: Joi.string().description('Mensaje de error si hubo problemas con la creación')
+                        //         })
+                        //     }
+                        // },
+                        // plugins: {
+                        //     'hapi-swagger': {
+                        //         responses: {
+                        //             201: { description: 'Created - El modelo fue creado exitosamente' },
+                        //             400: { description: 'Bad Request - Error en los datos proporcionados' }
+                        //         }
+                        //     }
+                        // }
                     }
                 },
                 PUT: {
@@ -157,7 +197,29 @@ export const generateRoutes = (model: string | undefined) => {
                         },
                         tags: ['api', 'putModel'], // Esto se mostrará en Swagger
                         description: 'Obtiene un modelo específico o todos',
-
+                        // response: {
+                        //     status: {
+                        //         200: Joi.object({
+                        //             success: Joi.boolean().description('Estado de la respuesta'),
+                        //             data: Joi.any().description('Datos del modelo actualizado')
+                        //         }),
+                        //         404: Joi.object({
+                        //             error: Joi.string().description('Mensaje de error si el modelo no se encontró')
+                        //         }),
+                        //         400: Joi.object({
+                        //             error: Joi.string().description('Error de validación')
+                        //         })
+                        //     }
+                        // },
+                        // plugins: {
+                        //     'hapi-swagger': {
+                        //         responses: {
+                        //             200: { description: 'OK - El modelo fue actualizado exitosamente' },
+                        //             400: { description: 'Bad Request - Error en los datos proporcionados' },
+                        //             404: { description: 'Not Found - El modelo no fue encontrado' }
+                        //         }
+                        //     }
+                        // }
                     }
                 },
                 DELETE: {
@@ -188,7 +250,26 @@ export const generateRoutes = (model: string | undefined) => {
                     },
                     options: {
                         tags: ['api', 'deleteModel'], // Esto se mostrará en Swagger
-                        description: 'Obtiene un modelo específico o todos'
+                        description: 'Obtiene un modelo específico o todos',
+                        // response: {
+                        //     status: {
+                        //         200: Joi.object({
+                        //             success: Joi.boolean().description('Indica si la eliminación fue exitosa'),
+                        //             message: Joi.string().description('Mensaje de éxito en la eliminación')
+                        //         }),
+                        //         404: Joi.object({
+                        //             error: Joi.string().description('Mensaje de error si el modelo no fue encontrado')
+                        //         })
+                        //     }
+                        // },
+                        // plugins: {
+                        //     'hapi-swagger': {
+                        //         responses: {
+                        //             200: { description: 'OK - El modelo fue eliminado exitosamente' },
+                        //             404: { description: 'Not Found - El modelo no fue encontrado' }
+                        //         }
+                        //     }
+                        // }
                     }
                 }
             }

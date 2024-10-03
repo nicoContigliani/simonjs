@@ -3,11 +3,11 @@ import { AppDataSource } from "../ormconfig";
 
 const entities = async (model: string) => {
     const { [model]: Entity } = await import(`../entities/${model}`);
-    return Entity; // Retorna la entidad
+    return Entity; // Returns the entity
 };
 
 export const dao: any = {
-    // DAO para el modelo Evaluation
+    // DAO for the Evaluation model
     User: {
         get: async () => {
             const Entity = await entities('Evaluation');
@@ -19,7 +19,7 @@ export const dao: any = {
             const Entity = await entities('Evaluation');
             const repository = AppDataSource.getRepository(Entity);
             const item = await repository.findOne({
-                where: { id },  // Busca por el campo 'id'
+                where: { id },  // Searches by the 'id' field
             });
             return item;
         },
@@ -29,39 +29,27 @@ export const dao: any = {
             return await repository.save(data);
         },
         put: async (data: any, id: any) => {
-            console.log("🚀 ~ put: ~ data:", data)
+            console.log("🚀 ~ put: ~ data:", data);
             const Entity = await entities('Evaluation');
             const repository = await AppDataSource.getRepository(Entity);
-            // await repository.update(id, data);
             try {
                 const updateResult = await repository.update(id, data);
-                console.log("🚀 ~ put: ~ updateResult:---39", updateResult)
-                return updateResult
-
+                console.log("🚀 ~ put: ~ updateResult:---39", updateResult);
+                return updateResult;
             } catch (error) {
-                console.log("🚀 ~ put: ~ error:", error)
-
+                console.log("🚀 ~ put: ~ error:", error);
             }
-            // const item = await repository.findOne({
-            //     where: { id },  // Busca por el campo 'id'
-            //     relations: ['product'] // Incluye la relación con 'product'
-            // });
-            // return item;
         },
         delete: async (data: any, id: any) => {
             const Entity = await entities('Evaluation');
             const repository = await AppDataSource.getRepository(Entity);
             try {
                 const updateResult = await repository.update(id, data);
-                return updateResult
-
+                return updateResult;
             } catch (error) {
-                console.log("🚀 ~ put: ~ error:", error)
-
+                console.log("🚀 ~ put: ~ error:", error);
             }
         },
-
-        // Aquí puedes agregar otros métodos, como findOne, create, update, etc.
     },
     Evaluation: {
         get: async () => {
@@ -74,8 +62,8 @@ export const dao: any = {
             const Entity = await entities('Evaluation');
             const repository = AppDataSource.getRepository(Entity);
             const item = await repository.findOne({
-                where: { id },  // Busca por el campo 'id'
-                relations: ['product'] // Incluye la relación con 'product'
+                where: { id },  // Searches by the 'id' field
+                relations: ['product'], // Includes relation with 'product'
             });
             return item;
         },
@@ -85,39 +73,27 @@ export const dao: any = {
             return await repository.save(data);
         },
         put: async (data: any, id: any) => {
-            console.log("🚀 ~ put: ~ data:", data)
+            console.log("🚀 ~ put: ~ data:", data);
             const Entity = await entities('Evaluation');
             const repository = await AppDataSource.getRepository(Entity);
-            // await repository.update(id, data);
             try {
                 const updateResult = await repository.update(id, data);
-                console.log("🚀 ~ put: ~ updateResult:---39", updateResult)
-                return updateResult
-
+                console.log("🚀 ~ put: ~ updateResult:---39", updateResult);
+                return updateResult;
             } catch (error) {
-                console.log("🚀 ~ put: ~ error:", error)
-
+                console.log("🚀 ~ put: ~ error:", error);
             }
-            // const item = await repository.findOne({
-            //     where: { id },  // Busca por el campo 'id'
-            //     relations: ['product'] // Incluye la relación con 'product'
-            // });
-            // return item;
         },
         delete: async (data: any, id: any) => {
             const Entity = await entities('Evaluation');
             const repository = await AppDataSource.getRepository(Entity);
             try {
                 const updateResult = await repository.update(id, data);
-                return updateResult
-
+                return updateResult;
             } catch (error) {
-                console.log("🚀 ~ put: ~ error:", error)
-
+                console.log("🚀 ~ put: ~ error:", error);
             }
         },
-
-        // Aquí puedes agregar otros métodos, como findOne, create, update, etc.
     },
     default: {
         get: async () => {
@@ -130,8 +106,8 @@ export const dao: any = {
             const Entity = await entities('Evaluation');
             const repository = AppDataSource.getRepository(Entity);
             const item = await repository.findOne({
-                where: { id },  // Busca por el campo 'id'
-                relations: ['product'] // Incluye la relación con 'product'
+                where: { id },  // Searches by the 'id' field
+                relations: ['product'], // Includes relation with 'product'
             });
             return item;
         },
@@ -141,41 +117,29 @@ export const dao: any = {
             return await repository.save(data);
         },
         put: async (data: any, id: any) => {
-            console.log("🚀 ~ put: ~ data:", data)
+            console.log("🚀 ~ put: ~ data:", data);
             const Entity = await entities('Evaluation');
             const repository = await AppDataSource.getRepository(Entity);
-            // await repository.update(id, data);
             try {
                 const updateResult = await repository.update(id, data);
-                console.log("🚀 ~ put: ~ updateResult:---39", updateResult)
-                return updateResult
-
+                console.log("🚀 ~ put: ~ updateResult:---39", updateResult);
+                return updateResult;
             } catch (error) {
-                console.log("🚀 ~ put: ~ error:", error)
-
+                console.log("🚀 ~ put: ~ error:", error);
             }
-            // const item = await repository.findOne({
-            //     where: { id },  // Busca por el campo 'id'
-            //     relations: ['product'] // Incluye la relación con 'product'
-            // });
-            // return item;
         },
         delete: async (data: any, id: any) => {
             const Entity = await entities('Evaluation');
             const repository = await AppDataSource.getRepository(Entity);
             try {
                 const updateResult = await repository.update(id, data);
-                return updateResult
-
+                return updateResult;
             } catch (error) {
-                console.log("🚀 ~ put: ~ error:", error)
-
+                console.log("🚀 ~ put: ~ error:", error);
             }
         },
-
     },
-}
-
+};
 
 export const daoDinamic: any | undefined = {
     get: async (model: string): Promise<any[]> => {
@@ -203,7 +167,7 @@ export const daoDinamic: any | undefined = {
 
             const repository = AppDataSource.getRepository(Entity);
             const item = await repository.findOne({
-                where: { id }, // Busca por el campo 'id'
+                where: { id }, // Searches by the 'id' field
             });
 
             if (!item) throw new Error(`Item with ID ${id} not found.`);
@@ -222,11 +186,9 @@ export const daoDinamic: any | undefined = {
             if (!Entity) throw new Error("Entity not found.");
             const repository = AppDataSource.getRepository(Entity);
             return await repository.save(data);
-
-
         } catch (error: any) {
-            console.error("Error in daoDinamic.getId:", error);
-            throw new Error(`Error fetching  from model "${model}": ${error.message}`);
+            console.error("Error in daoDinamic.post:", error);
+            throw new Error(`Error posting data for model "${model}": ${error.message}`);
         }
     },
     update: async (data: any[] | any, id: number | string, model: string): Promise<any | null> => {
@@ -239,12 +201,11 @@ export const daoDinamic: any | undefined = {
             const repository = AppDataSource.getRepository(Entity);
             const updateResult = await repository.update(id, data);
             const item = await repository.findOne({
-                where: { id }, // Busca por el campo 'id'
+                where: { id }, // Searches by the 'id' field
             });
             return item;
         } catch (error: any) {
-            console.error("Error in daoDinamic.getId:", error);
-            // throw new Error(`Error fetching  from model "${model}": ${error.message}`);
+            console.error("Error in daoDinamic.update:", error);
         }
     },
     delete: async (id: number | string, model: string): Promise<any | null> => {
@@ -255,18 +216,13 @@ export const daoDinamic: any | undefined = {
             if (!Entity) throw new Error("Entity not found.");
 
             const data = { [`status_${model}`]: false };
-
             const idData = { ["id"]: 0 };
 
             const repository = AppDataSource.getRepository(Entity);
             const updateResult = await repository.update(id, idData);
-            // const item = await repository.findOne({
-            //     where: { id }, // Busca por el campo 'id'
-            // });
             return updateResult;
         } catch (error: any) {
-            console.error("Error in daoDinamic.getId:", error);
-            // throw new Error(`Error fetching  from model "${model}": ${error.message}`);
+            console.error("Error in daoDinamic.delete:", error);
         }
     }
-}
+};

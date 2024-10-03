@@ -8,10 +8,10 @@ export const businessLogic: any = {
 
             if (id) {
                 try {
-                    // Si se proporciona un ID, obtenemos la entidad específica por ID
-                    const todo = await dao[model].getid(id);
-                    if (todo) {
-                        return todo;  // Retorna la entidad encontrada
+                    // If an ID is provided, we get the specific entity by ID
+                    const item = await dao[model].getid(id);
+                    if (item) {
+                        return item;  // Return the found entity
                     } else {
                         return `No item found with ID ${id} for model ${model}`;
                     }
@@ -22,28 +22,28 @@ export const businessLogic: any = {
             }
 
             try {
-                const todo = await dao[model].get();
-                return todo
+                const items = await dao[model].get();
+                return items;
 
             } catch (error) {
-                if (process.env.ENVIRIOMENTS === "developer") messageError("\n You need add dto model in src/services/dao.services.ts file")
+                if (process.env.ENVIRIOMENTS === "developer") messageError("\n You need to add the dto model in src/services/dao.services.ts file");
                 return `Error fetching data for model: ${model}`;
             }
 
         },
         POST: async (data: any[] | any | undefined, model: any) => {
             try {
-                const todo = await dao[model].post(data);
-                return todo
+                const item = await dao[model].post(data);
+                return item;
             } catch (error) {
-                if (process.env.ENVIRIOMENTS === "developer") messageError(`\n Post: You need add dto model in src/services/dao.services.ts file --- ${model}`)
-                return `Error fetching data for model: ${model}`;
+                if (process.env.ENVIRIOMENTS === "developer") messageError(`\n Post: You need to add the dto model in src/services/dao.services.ts file --- ${model}`);
+                return `Error posting data for model: ${model}`;
             }
         },
         PUT: async (id: string | number, data: any[] | any | undefined, model: any) => {
 
             try {
-                // Verifica si 'id' y 'data' son válidos
+                // Check if 'id' and 'data' are valid
                 if (!id || !data) {
                     throw new Error("Missing 'id' or 'data' for update operation");
                 }
@@ -52,19 +52,16 @@ export const businessLogic: any = {
                 return updatedRecord;
 
             } catch (error: any) {
-
-                if (process.env.ENVIRIOMENTS === "developer") messageError(`\n Put: You need add dto model in src/services/dao.services.ts file --- ${model}`)
+                if (process.env.ENVIRIOMENTS === "developer") messageError(`\n Put: You need to add the dto model in src/services/dao.services.ts file --- ${model}`);
                 return `Error updating data for model: ${model}`;
             }
-
-            // return `user updated ${data}-----|----${id}`
         },
         DELETE: async (id: string | number, model: any) => {
 
-            // Crear el objeto con la clave dinámica y el valor asignado
+            // Create the object with the dynamic key and the assigned value
             const data = { [`status_${model}`]: false };
             try {
-                // Verifica si 'id' y 'data' son válidos
+                // Check if 'id' and 'data' are valid
                 if (!id || !data) {
                     throw new Error("Missing 'id' or 'data' for delete operation");
                 }
@@ -72,8 +69,8 @@ export const businessLogic: any = {
                 return updatedRecord;
 
             } catch (error: any) {
-                if (process.env.ENVIRIOMENTS === "developer") messageError(`\n Delete: You need add dto model in src/services/dao.services.ts file --- ${model}`)
-                return `Error updating data for model: ${model}`;
+                if (process.env.ENVIRIOMENTS === "developer") messageError(`\n Delete: You need to add the dto model in src/services/dao.services.ts file --- ${model}`);
+                return `Error deleting data for model: ${model}`;
             }
         }
     },
@@ -81,18 +78,19 @@ export const businessLogic: any = {
     Yo: {},
     Product: {
         GET: async (id: any | undefined, model: any) => {
-            let todo
+            let item;
 
-            if (id) return `user live ->${id}, ${model}`
+            if (id) return `Product fetched with ID ->${id}, Model -> ${model}`;
 
             try {
-                console.log("entro a dto");
-                // Importa dinámicamente la entidad en base al modelo
+                console.log("Entered the dto");
+
+                // Dynamically import the entity based on the model
                 const { [model]: Entity } = await import(`../entities/${model}`);
 
                 const repository = AppDataSource.getRepository(Entity);
-                const users = await repository.find();  // Aquí se espera a que los usuarios sean obtenidos
-                return users;
+                const products = await repository.find();  // Fetch the products
+                return products;
 
             } catch (error) {
                 console.log("🚀 ~ error: -16-", error);
@@ -101,26 +99,25 @@ export const businessLogic: any = {
 
         },
         POST: (data: any[] | any | undefined) => {
-            return `user created************${data}`
+            return `Product created ************ ${data}`;
         },
         PUT: (data: any[] | any | undefined, id: string | number) => {
 
-            return `user updated ${data}-----|----${id}`
+            return `Product updated: ${data} -----|---- ${id}`;
         },
         DELETE: (id: string | number) => {
-            return `user deleted -----|----${id}`
+            return `Product deleted -----|---- ${id}`;
         }
     },
     Def: {
-        GET: async (id: any | undefined, model: any, modelDinamic: any) => {
-            console.log("***********Default**************")
+        GET: async (id: any | undefined, model: any, modelDynamic: any) => {
+            console.log("***********Default**************");
 
             if (id) {
                 try {
-                    // Si se proporciona un ID, obtenemos la entidad específica por ID
-                    const todo = await dao[model].getid(id);
-                    if (todo) {
-                        return todo;  // Retorna la entidad encontrada
+                    const item = await dao[model].getid(id);
+                    if (item) {
+                        return item;
                     } else {
                         return `No item found with ID ${id} for model ${model}`;
                     }
@@ -131,10 +128,10 @@ export const businessLogic: any = {
             }
 
             try {
-                console.log("***********Default**************")
+                console.log("***********Default**************");
 
-                const todo = await dao[model].get();
-                return todo
+                const items = await dao[model].get();
+                return items;
 
             } catch (error) {
                 console.log("🚀 ~ error: -16-", error);
@@ -144,17 +141,16 @@ export const businessLogic: any = {
         },
         POST: async (data: any[] | any | undefined, model: any) => {
             try {
-                const todo = await dao[model].post(data);
-                return todo
+                const item = await dao[model].post(data);
+                return item;
             } catch (error) {
-                console.log("🚀 ~ error: -16-", error, `Error fetching data for model: ${model}`);
-                return `Error fetching data for model: ${model}`;
+                console.log("🚀 ~ error: -16-", error, `Error posting data for model: ${model}`);
+                return `Error posting data for model: ${model}`;
             }
         },
         PUT: async (id: string | number, data: any[] | any | undefined, model: any) => {
 
             try {
-                // Verifica si 'id' y 'data' son válidos
                 if (!id || !data) {
                     throw new Error("Missing 'id' or 'data' for update operation");
                 }
@@ -167,14 +163,11 @@ export const businessLogic: any = {
                 return `Error updating data for model: ${model}`;
             }
 
-            // return `user updated ${data}-----|----${id}`
         },
         DELETE: async (id: string | number, model: any) => {
 
-            // Crear el objeto con la clave dinámica y el valor asignado
             const data = { [`status_${model}`]: false };
             try {
-                // Verifica si 'id' y 'data' son válidos
                 if (!id || !data) {
                     throw new Error("Missing 'id' or 'data' for delete operation");
                 }
@@ -182,20 +175,19 @@ export const businessLogic: any = {
                 return updatedRecord;
 
             } catch (error: any) {
-                console.log("🚀 ~ error: -131-", error.messages, `Error delete data for model: ${model}`);
-                return `Error updating data for model: ${model}`;
+                console.log("🚀 ~ error: -131-", error.messages, `Error deleting data for model: ${model}`);
+                return `Error deleting data for model: ${model}`;
             }
         }
     },
     Evaluation: {
-        GET: async (id: any | undefined, model: any, modelDinamic: any) => {
+        GET: async (id: any | undefined, model: any, modelDynamic: any) => {
 
             if (id) {
                 try {
-                    // Si se proporciona un ID, obtenemos la entidad específica por ID
-                    const todo = await dao[model].getid(id);
-                    if (todo) {
-                        return todo;  // Retorna la entidad encontrada
+                    const item = await dao[model].getid(id);
+                    if (item) {
+                        return item;
                     } else {
                         return `No item found with ID ${id} for model ${model}`;
                     }
@@ -206,8 +198,8 @@ export const businessLogic: any = {
             }
 
             try {
-                const todo = await dao[model].get();
-                return todo
+                const items = await dao[model].get();
+                return items;
 
             } catch (error) {
                 console.log("🚀 ~ error: -16-", error);
@@ -217,17 +209,16 @@ export const businessLogic: any = {
         },
         POST: async (data: any[] | any | undefined, model: any) => {
             try {
-                const todo = await dao[model].post(data);
-                return todo
+                const item = await dao[model].post(data);
+                return item;
             } catch (error) {
-                console.log("🚀 ~ error: -16-", error, `Error fetching data for model: ${model}`);
-                return `Error fetching data for model: ${model}`;
+                console.log("🚀 ~ error: -16-", error, `Error posting data for model: ${model}`);
+                return `Error posting data for model: ${model}`;
             }
         },
         PUT: async (id: string | number, data: any[] | any | undefined, model: any) => {
 
             try {
-                // Verifica si 'id' y 'data' son válidos
                 if (!id || !data) {
                     throw new Error("Missing 'id' or 'data' for update operation");
                 }
@@ -240,14 +231,11 @@ export const businessLogic: any = {
                 return `Error updating data for model: ${model}`;
             }
 
-            // return `user updated ${data}-----|----${id}`
         },
         DELETE: async (id: string | number, model: any) => {
 
-            // Crear el objeto con la clave dinámica y el valor asignado
             const data = { [`status_${model}`]: false };
             try {
-                // Verifica si 'id' y 'data' son válidos
                 if (!id || !data) {
                     throw new Error("Missing 'id' or 'data' for delete operation");
                 }
@@ -255,58 +243,9 @@ export const businessLogic: any = {
                 return updatedRecord;
 
             } catch (error: any) {
-                console.log("🚀 ~ error: -131-", error.messages, `Error delete data for model: ${model}`);
-                return `Error updating data for model: ${model}`;
+                console.log("🚀 ~ error: -131-", error.messages, `Error deleting data for model: ${model}`);
+                return `Error deleting data for model: ${model}`;
             }
         }
     },
-}
-
-
-// console.log("entro a dao");
-// // Importa dinámicamente la entidad en base al modelo
-// const { [model]: Entity } = await import(`../entities/${model}`);
-
-// const todo = dao.GETEvaluation(model);
-// return todo
-
-// // const repository = AppDataSource.getRepository(Entity);
-// // const users = await repository.find({ relations: ['product'] });  // Aquí se espera a que los usuarios sean obtenidos
-// // return users;
-
-
-
-// GET: (id: any | undefined, model: any) => {
-//     let todo
-//     // console.log(`user live ${id}, ${model}`)
-//     if (id) return `user live ->${id}, ${model}`
-
-//     if (!id) {
-
-//         const funtionAsync = async () => {
-
-//             try {
-//                 console.log("entro a dto")
-//                 const { [model]: Entity } = await import(`../entities/${model}`);
-//                 const repository = AppDataSource.getRepository(Entity);
-//                 const users = await repository.find();
-//                 return users
-//             } catch (error) {
-//                 console.log("🚀 ~ funtionAsync ~ error: -16-", error)
-//             }
-//         }
-//         funtionAsync();
-//         return `model:${model} live`
-//     }
-// },
-// POST: (data: any[] | any | undefined) => {
-//     return `user created************${data}`
-// },
-// PUT: (data: any[] | any | undefined, id: string | number) => {
-
-//     return `user updated ${data}-----|----${id}`
-// },
-// DELETE: (id: string | number) => {
-//     return `user deleted -----|----${id}`
-// }
-// },
+};
