@@ -3,6 +3,7 @@ import { AppDataSource } from "../ormconfig";
 import { generateToken } from '../utils/jwtUtils';
 import * as bcrypt from 'bcrypt';
 import Joi from 'joi';
+import { getValidationRulesForFrontend } from './getValidationRulesForFrontend.services';
 
 // Define interfaces for requests
 interface LoginRequest {
@@ -36,6 +37,10 @@ const loginSchema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
 }).label('Login Model');
+
+// Get validation rules
+const rulesValidations = getValidationRulesForFrontend()
+
 
 // Auth service
 const authService = (server: Server) => {
@@ -80,7 +85,7 @@ const authService = (server: Server) => {
                 // Generate JWT token
                 const token = generateToken(email);
 
-                return h.response({ message: 'User registered successfully.', token }).code(201);
+                return h.response({ message: 'User registered successfully.', token, rules: rulesValidations }).code(201);
             } catch (error) {
                 console.error('Error registering user:', error);
                 return h.response({ message: 'User registration failed.' }).code(500);
@@ -131,7 +136,10 @@ const authService = (server: Server) => {
                 // Generate JWT token
                 const token = generateToken(user.email);
 
-                return h.response({ message: 'Login successful.', token }).code(200);
+
+
+
+                return h.response({ message: 'Login successful.', token, rules: rulesValidations }).code(200);
             } catch (error) {
                 console.error('Error during login:', error);
                 return h.response({ message: 'Login failed.' }).code(500);
